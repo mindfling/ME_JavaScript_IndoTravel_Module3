@@ -1,7 +1,6 @@
-import {menuControl} from './modules/menu.js';
-import {timer, timerControl} from './modules/timer.js';
+// * import all modules to index
 
-menuControl();
+import {timer, timerControl} from './modules/timer.js';
 
 timerControl(timer);
 
