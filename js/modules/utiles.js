@@ -24,3 +24,11 @@ export const plural = (number, text, cases = [2, 0, 1, 1, 1, 2]) => text[((numbe
   console.log(`На счету ${n} рубл${plural(n, v)}`); // На счету 224 рубля
  */
 
+/**
+// todo test plural
+for (let i = 0; i < 111; i++) {
+  console.log('plural ', i,
+    plural(i, ['1,21,31яблоко', '2,3,4,яблока', '0,5,6,7,8,9,10,11,12..20,яблок']));
+    plural(i, ['яблоко', 'яблока', 'яблок']));
+}
+ */
