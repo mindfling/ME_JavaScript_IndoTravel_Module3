@@ -3360,3 +3360,8 @@ p {
 				margin-bottom: 15px;
 		}
 }
+
+::selection {
+  color: #fff;
+  background-color: #ff9800c2;
+}

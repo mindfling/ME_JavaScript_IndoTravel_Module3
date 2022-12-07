@@ -5,7 +5,7 @@
 import {plural, zeroBeforeNumber} from './utiles.js';
 
 
-export const timerControl = (timer, deadline) => {
+export const timerControl = (timer) => {
   // получаем элементы таймера
   const timerCountDays = timer.querySelector('.timer__count_days');
   const timerUnitsDays = timer.querySelector('.timer__units_days');
@@ -15,27 +15,23 @@ export const timerControl = (timer, deadline) => {
   const timerUnitsMinutes = timer.querySelector('.timer__units_minutes');
 
 
-  // ? '15/1/2022' -> '2020-1-15'
-  const timerDeadline = timer.dataset.deadline.split('/').reverse().join('-');
-  console.log('timer.dataset.timerDeadline: ', timer.dataset.deadline);
-  const timeDeadline = new Date(Date.parse(timerDeadline));
-  console.log('timerDeadline: ', timerDeadline);
-  console.log('timeDeadline: ', timeDeadline.getTime(), timeDeadline);
+  // ? parse ? '15/1/2022' -> '2020-1-15'
+  const deadline = timer.dataset.deadline.split('/').reverse().join('-');
+  const timeDeadline = new Date(Date.parse(deadline));
+  // ? time is up to now
   const timeNow = new Date();
-  console.log('timeNow: ', timeNow.getTime(), timeNow);
-
   const delta = timeDeadline - timeNow; // timeDeadline > timeNow
 
   if (delta > 0) {
-    console.log('До Дед Лайна еще осталось ', delta);
-    const timeLeft = parseInt((timeDeadline - timeNow) / 1000);
-    const timeLeftSecondsAll = parseInt(delta / 1000);
-    const timeLeftMinutesAll = parseInt(timeLeftSecondsAll / 60);
-    const timeLeftHours = parseInt(timeLeftMinutesAll / 60);
+    console.log('До дедлайна еще осталось ', delta);
+    const timeLeft = parseInt((timeDeadline.getTime() - timeNow.getTime()) / 1000);
 
-    console.log('timeLeftSecondsAll: ', timeLeftSecondsAll, 'всего секунд');
-    console.log('timeLeftMinutesAll: ', timeLeftMinutesAll, 'всего минут');
-    console.log('timeLeftHours: ', timeLeftHours, 'часов');
+    // const timeLeftSecondsAll = parseInt(delta / 1000);
+    // const timeLeftMinutesAll = parseInt(timeLeftSecondsAll / 60);
+    // const timeLeftHours = parseInt(timeLeftMinutesAll / 60);
+    // console.log('timeLeftSecondsAll: ', timeLeftSecondsAll, 'всего секунд');
+    // console.log('timeLeftMinutesAll: ', timeLeftMinutesAll, 'всего минут');
+    // console.log('timeLeftHours: ', timeLeftHours, 'часов');
 
     console.log('timeLeft: ', timeLeft);
     const secondsLeft = timeLeft % 60;
@@ -50,22 +46,26 @@ export const timerControl = (timer, deadline) => {
 
     timerCountMinutes.textContent = zeroBeforeNumber(minutesLeft);
     timerUnitsMinutes.textContent = plural(minutesLeft, ['минута', 'минуты', 'минут']);
-  
+
+    timerCountMinutes.textContent = zeroBeforeNumber(secondsLeft);
+    timerUnitsMinutes.textContent = plural(secondsLeft, ['секунда', 'секунды', 'секунд']);
+
     timerCountHours.textContent = zeroBeforeNumber(hoursLeft);
     timerUnitsHours.textContent = plural(hoursLeft, ['час', 'часа', 'часов']);
-  
+
     timerCountDays.textContent = zeroBeforeNumber(daysLeft);
     timerUnitsDays.textContent = plural(daysLeft, ['день', 'дня', 'дней']);
 
     return;
   } else {
-    console.log('Время истекло');
-
+    console.log('Время истекло, ', deadline);
+    console.log(timeDeadline);
+    // timer.style.display = 'none';
+    timer.style.opacity = 0;
     return;
   }
 
-
-  /*
+  /**
   const minutes = time.getMinutes();
   timerCountMinutes.textContent = zeroBeforeNumber(minutes);
   timerUnitsMinutes.textContent = plural(minutes, ['минута', 'минуты', 'минут']);
@@ -96,7 +96,4 @@ export const timerControl = (timer, deadline) => {
     new Date(delta).getHours(),
   );
   */
-
-
-  return;
 };
