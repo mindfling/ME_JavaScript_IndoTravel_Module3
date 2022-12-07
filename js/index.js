@@ -1,6 +1,7 @@
 // * import all modules to index
 
-import {heroTimer, timerControl} from './modules/timer.js';
+import {timerControl} from './modules/timer.js';
+
+const heroTimer = document.querySelector('.hero__timer');
 
 timerControl(heroTimer);
-
