@@ -1,6 +1,6 @@
 // * import all modules to index
 
-import {heroTimer as timer, timerControl} from './modules/timer.js';
+import {heroTimer, timerControl} from './modules/timer.js';
 
-timerControl(timer);
+timerControl(heroTimer);
 
