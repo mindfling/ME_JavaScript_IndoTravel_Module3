@@ -19,15 +19,13 @@ export const timerControl = (timer) => {
   const deadline = timer.dataset.deadline.split('/').reverse().join('-');
   const timeDeadline = new Date(Date.parse(deadline));
 
-
-  const secondInterval = setInterval(() => {
-    // ? time is up to now
+  const timeout = 1000; // ? изменяем таймаут интервала
+  const timerHandle = (timeDeadline, intervalID) => {
     const timeNow = new Date();
-    const delta = timeDeadline - timeNow; // timeDeadline > timeNow
+    const delta = timeDeadline.getTime() - timeNow.getTime();
     if (delta > 0) {
-      console.log('До дедлайна еще осталось ', delta);
+      console.log('До дедлайна еще осталось ', delta, 'ms');
       const timeLeft = parseInt((timeDeadline.getTime() - timeNow.getTime()) / 1000);
-
       const secondsLeft = parseInt(timeLeft % 60);
       const minutesLeft = parseInt(timeLeft / 60 % 60);
       const hoursLeft = parseInt(timeLeft / 60 / 60 % 24);
@@ -39,27 +37,30 @@ export const timerControl = (timer) => {
       console.log('hoursLeft: ', hoursLeft);
       console.log('daysLeft: ', daysLeft);
 
-      timerCountMinutes.textContent = zeroBeforeNumber(secondsLeft);
-      timerUnitsMinutes.textContent = plural(secondsLeft, ['секунда', 'секунды', 'секунд']);
-      // timerCountMinutes.textContent = zeroBeforeNumber(minutesLeft);
-      // timerUnitsMinutes.textContent = plural(minutesLeft, ['минута', 'минуты', 'минут']);
+      // timerCountSeconds.textContent = zeroBeforeNumber(secondsLeft);
+      // timerUnitsSeconds.textContent = plural(secondsLeft, ['секунда', 'секунды', 'секунд']);
+      timerCountMinutes.textContent = zeroBeforeNumber(minutesLeft);
+      timerUnitsMinutes.textContent = plural(minutesLeft, ['минута', 'минуты', 'минут']);
       timerCountHours.textContent = zeroBeforeNumber(hoursLeft);
       timerUnitsHours.textContent = plural(hoursLeft, ['час', 'часа', 'часов']);
       timerCountDays.textContent = zeroBeforeNumber(daysLeft);
       timerUnitsDays.textContent = plural(daysLeft, ['день', 'дня', 'дней']);
-
+      console.log('secondInterval: ', intervalID);
       return;
     } else {
       console.log('Время истекло, ', deadline + ',', timeDeadline);
-      // скрываем .hero__timer
-      // timer.style.display = 'none';
       timer.style.opacity = .2;
-      // сбрасываем интервал
-      clearInterval(secondInterval);
+      if (intervalID) {
+        console.log('очищаем secondInterval: ', intervalID);
+        clearInterval(intervalID);
+      }
       return;
     }
-  // ? 60*1000 минутный интервал
-  }, 1000);
+  };
+  timerHandle(timeDeadline);
 
-  console.log('secondInterval: ', secondInterval);
+  const secondInterval = setInterval(() => {
+    timerHandle(timeDeadline, secondInterval);
+  // ? 60*1000 минутный интервал
+  }, timeout);
 };
