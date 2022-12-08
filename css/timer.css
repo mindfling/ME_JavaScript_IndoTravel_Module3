@@ -3,13 +3,13 @@
 		display: grid;
 		-ms-grid-columns: (1fr) [ 3 ];
 		grid-template-columns: repeat(3, 1fr);
-		grid-template-areas: "title title title" "days hours minutes";
+		grid-template-areas: "title title title title" "days hours minutes seconds";
 }
 
 .timer__title {
 		-ms-grid-row: 1;
 		-ms-grid-column: 1;
-		-ms-grid-column-span: 3;
+		-ms-grid-column-span: 4;
 		grid-area: title;
 		font-weight: bold;
 		font-size: 20px;
@@ -33,6 +33,12 @@
 		-ms-grid-row: 2;
 		-ms-grid-column: 3;
 		grid-area: minutes;
+}
+
+.timer__seconds {
+		-ms-grid-row: 2;
+		-ms-grid-column: 4;
+		grid-area: seconds;
 }
 
 .timer__item {
