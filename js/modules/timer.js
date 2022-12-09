@@ -6,6 +6,9 @@ import {plural, zeroBeforeNumber} from './utiles.js';
 
 
 export const timerControl = (timer) => {
+  // таймер и баннер акции
+  timer = timer || document.querySelector('.hero__timer');
+  const banner = document.querySelector('.hero__text');
   // получаем элементы таймера
   const timerCountDays = timer.querySelector('.timer__count_days');
   const timerUnitsDays = timer.querySelector('.timer__units_days');
@@ -14,12 +17,20 @@ export const timerControl = (timer) => {
   const timerCountMinutes = timer.querySelector('.timer__count_minutes');
   const timerUnitsMinutes = timer.querySelector('.timer__units_minutes');
 
-
-  // ? parse ? '15/1/2022' -> '2020-1-15'
+  // ? parse ? '15/1/2022' -> '2020-1-15' персерим строку даты
   const deadline = timer.dataset.deadline.split('/').reverse().join('-');
   const timeDeadline = new Date(Date.parse(deadline));
 
-  const timeout = 1000; // ? изменяем таймаут интервала
+  const timerRemove = (elem) => {
+    elem.style.display = 'none';
+  };
+  const bannerRemove = (elem) => {
+    elem.style.display = 'none';
+    elem.style.opacity = 0;
+    elem.innerHTML = '&nbsp;<br>&nbsp;';
+  };
+
+  const timeout = 5000; // ? изменяем таймаут интервала корректный для минут
   const timerHandle = (timeDeadline, intervalID) => {
     const timeNow = new Date();
     const delta = timeDeadline.getTime() - timeNow.getTime();
@@ -37,19 +48,17 @@ export const timerControl = (timer) => {
       console.log('hoursLeft: ', hoursLeft);
       console.log('daysLeft: ', daysLeft);
 
-      // timerCountSeconds.textContent = zeroBeforeNumber(secondsLeft);
-      // timerUnitsSeconds.textContent = plural(secondsLeft, ['секунда', 'секунды', 'секунд']);
       timerCountMinutes.textContent = zeroBeforeNumber(minutesLeft);
       timerUnitsMinutes.textContent = plural(minutesLeft, ['минута', 'минуты', 'минут']);
       timerCountHours.textContent = zeroBeforeNumber(hoursLeft);
       timerUnitsHours.textContent = plural(hoursLeft, ['час', 'часа', 'часов']);
       timerCountDays.textContent = zeroBeforeNumber(daysLeft);
       timerUnitsDays.textContent = plural(daysLeft, ['день', 'дня', 'дней']);
-      console.log('secondInterval: ', intervalID);
       return;
     } else {
       console.log('Время истекло, ', deadline + ',', timeDeadline);
-      timer.style.opacity = .2;
+      timerRemove(timer);
+      bannerRemove(banner);
       if (intervalID) {
         console.log('очищаем secondInterval: ', intervalID);
         clearInterval(intervalID);
