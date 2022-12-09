@@ -2,6 +2,8 @@
 
 import {timerControl} from './modules/timer.js';
 
-const heroTimer = document.querySelector('.hero__timer');
+const heroBanner = document.querySelector('.hero__text');
+const heroTimer = document.querySelector('[data-deadline]');
+// const heroTimer = document.querySelector('.hero__timer');
 
-timerControl(heroTimer);
+timerControl(heroTimer, heroBanner);
