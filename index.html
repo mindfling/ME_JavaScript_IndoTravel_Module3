@@ -10,8 +10,11 @@
   <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
   <link rel="icon" type="image/png" href="img/favicon.png">
   <link rel="stylesheet" href="css/index.css">
-  <link rel="stylesheet" href="css/timer.css">
-  <script src="js/index.js" type="module"></script>
+  <!-- <link rel="stylesheet" href="css/timer.css"> -->
+  <!-- <script src="js/index.js" type="module"></script> -->
+  <!-- timer plugin -->
+  <link rel="stylesheet" href="lib/pluginTimer/timer.css">
+  <script src="lib/pluginTimer/timerPlugin.js"></script>
   <title>Indonesia Indo Travel Group</title>
 </head>
 <body>
@@ -44,7 +47,8 @@
           </div>
 
           <p class="hero__text">Действует скидка 20% на туры от 6&nbsp;человек</p>
-
+          <div class="hero__timer" data-timer-deadline="10/12/2022 20:45:52"></div>
+          <!--
           <div class="hero__timer timer" data-deadline="10/12/2022 8:30">
             <p class="timer__title">До конца акции осталось:</p>
             <p class="timer__item timer__item_days">
@@ -60,8 +64,7 @@
               <span class="timer__count timer__count_seconds">00</span>
               <span class="timer__units timer__units_seconds">сек</span></p>
           </div>
-
-          <div class="hero__timer" data-timer-deadline="9/12/2022 15:45"></div>
+          -->
 
           <button class="button hero__button">Забронировать</button>
         </div>
