@@ -49,12 +49,6 @@ export const timerControl = (timer, banner) => {
       const hoursLeftAll = timeLeft / 60 / 60; // float all hours
       const daysLeft = parseInt(timeLeft / 60 / 60 / 24);
 
-      // console.log('all seconds: ', timeLeft);
-      // console.log('secondsLeft: ', secondsLeft,
-      //   'minutesLeft: ', minutesLeft,
-      //   'hoursLeft: ', hoursLeft,
-      //   'daysLeft: ', daysLeft);
-
       if (hoursLeftAll >= 24) {
         // console.log('больше суток в запасе', hoursLeftAll);
         timerItemDays.style.display = 'flex';
@@ -75,16 +69,16 @@ export const timerControl = (timer, banner) => {
       timerCountHours.textContent = zeroBeforeNumber(hoursLeft);
       timerUnitsHours.textContent = plural(hoursLeft, ['час', 'часа', 'часов']);
 
-      // запускае функцию с разными интервалами чтобы лишний раз не наглужать
+      // запускаем функцию с разными интервалами чтобы лишний раз не наглужать
       if (hoursLeftAll < 25) {
-        console.log('сутки');
-        // setTimeout(timerHandle, 1000, timeDeadline);
+        // console.log('сутки');
+        setTimeout(timerHandle, 1000, timeDeadline);
       } else if (hoursLeftAll < 48) {
-        console.log('около суток');
-        // setTimeout(timerHandle, 5000, timeDeadline);
+        // console.log('около суток');
+        setTimeout(timerHandle, 5000, timeDeadline);
       } else {
-        console.log('больше суток');
-        // setTimeout(timerHandle, 10000, timeDeadline);
+        // console.log('больше суток');
+        setTimeout(timerHandle, 10000, timeDeadline);
       }
       return;
     } else {
@@ -95,7 +89,7 @@ export const timerControl = (timer, banner) => {
     }
   };
 
-  // запускаем 1й раз
+  // * 1й раз запускаем timeout = 0
   setTimeout(() => {
     timerHandle(timeDeadline);
   }, 0);
