@@ -49,20 +49,20 @@ export const timerControl = (timer, banner) => {
       const hoursLeftAll = timeLeft / 60 / 60; // float all hours
       const daysLeft = parseInt(timeLeft / 60 / 60 / 24);
 
-      console.log('all seconds: ', timeLeft);
-      console.log('secondsLeft: ', secondsLeft,
-        'minutesLeft: ', minutesLeft,
-        'hoursLeft: ', hoursLeft,
-        'daysLeft: ', daysLeft);
+      // console.log('all seconds: ', timeLeft);
+      // console.log('secondsLeft: ', secondsLeft,
+      //   'minutesLeft: ', minutesLeft,
+      //   'hoursLeft: ', hoursLeft,
+      //   'daysLeft: ', daysLeft);
 
       if (hoursLeftAll >= 24) {
-        console.log('больше суток в запасе', hoursLeftAll);
+        // console.log('больше суток в запасе', hoursLeftAll);
         timerItemDays.style.display = 'flex';
         timerCountDays.textContent = zeroBeforeNumber(daysLeft);
         timerUnitsDays.textContent = plural(daysLeft, ['день', 'дня', 'дней']);
         timerItemSeconds.style.display = 'none'; // скрываем секунды
       } else {
-        console.log('меньше суток до', deadline);
+        // console.log('меньше суток до', deadline);
         timerItemSeconds.style.display = 'flex';
         timerCountSeconds.textContent = zeroBeforeNumber(secondsLeft);
         timerUnitsSeconds.textContent = plural(secondsLeft, ['секунда', 'секунды', 'секунд']);
@@ -78,13 +78,13 @@ export const timerControl = (timer, banner) => {
       // запускае функцию с разными интервалами чтобы лишний раз не наглужать
       if (hoursLeftAll < 25) {
         console.log('сутки');
-        setTimeout(timerHandle, 1000, timeDeadline);
+        // setTimeout(timerHandle, 1000, timeDeadline);
       } else if (hoursLeftAll < 48) {
         console.log('около суток');
-        setTimeout(timerHandle, 5000, timeDeadline);
+        // setTimeout(timerHandle, 5000, timeDeadline);
       } else {
         console.log('больше суток');
-        setTimeout(timerHandle, 10000, timeDeadline);
+        // setTimeout(timerHandle, 10000, timeDeadline);
       }
       return;
     } else {
