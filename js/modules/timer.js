@@ -40,7 +40,7 @@ export const timerControl = (timer, banner) => {
     const timeNow = new Date();
     const delta = timeDeadline.getTime() - timeNow.getTime();
     if (delta > 0) {
-      console.log('До дедлайна осталось ', delta, 'ms');
+      // console.log('До дедлайна осталось ', delta, 'ms');
 
       const timeLeft = parseInt((timeDeadline.getTime() - timeNow.getTime()) / 1000); // all seconds
       const secondsLeft = parseInt(timeLeft % 60);
