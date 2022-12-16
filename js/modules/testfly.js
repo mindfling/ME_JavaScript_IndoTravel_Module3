@@ -16,6 +16,7 @@ fly.style.cssText = `
   background: url(./img/airplane.svg) center center / cover no-repeat;
   background-color: transparent;
   transform: rotateZ(90deg);
+  pointer-events: none;
 `;
 
 document.body.append(fly);
