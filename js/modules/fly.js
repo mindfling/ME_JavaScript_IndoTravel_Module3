@@ -22,19 +22,44 @@ export const flyControl = () => {
   `;
 
   document.body.append(fly);
+  let nextOffset = 0;
+  let prevOffset = nextOffset;
 
   const calcPositionFly = () => {
+    prevOffset = nextOffset;
+    const pageOffset = window.pageYOffset;
+    nextOffset = pageOffset;
     const scrollHeight = document.documentElement.scrollHeight;
     const clientHeight = document.documentElement.clientHeight;
     const maxDown = clientHeight - fly.clientHeight;
     const maxScroll = scrollHeight - clientHeight;
-    const percentScroll = (window.pageYOffset * 100) / maxScroll;
+    const percentScroll = Math.round((pageOffset * 100) / maxScroll);
     top = maxDown * percentScroll / 100;
-    fly.style.transform = 'translateY(' + top + 'px) rotate(180deg)';
+    console.log('percentScroll: ', percentScroll);
+    let opacity = 1;
+    if (percentScroll > 10) {
+      opacity = 1;
+    } else {
+      opacity = percentScroll / 10;
+    }
+    console.log('opacity: ', opacity);
+    fly.style.opacity = opacity;
+    if (prevOffset < nextOffset) {
+      fly.style.transform = `translateY(${top}px) rotate(180deg)`;
+      console.log('скролим вниз');
+    } else {
+      fly.style.transform = `translateY(${top}px) rotate(0)`;
+      console.log('скролим вверх');
+    }
     return;
   };
+  requestAnimationFrame(calcPositionFly);
 
-  window.addEventListener('scroll', (event) => {
+  document.addEventListener('scroll', (event) => {
     requestAnimationFrame(calcPositionFly);
+  });
+
+  fly.addEventListener('click', (event) => {
+    alert('fly');
   });
 };
