@@ -16,7 +16,7 @@ flyOverlay.style.cssText = `
   bottom: 0;
   left: 0;
   opacity: ${opacity};
-  z-index: 55;
+  z-index: 999;
 `;
 
 const docEl = document.documentElement;
