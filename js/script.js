@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const head = document.head;
   const style = document.createElement('link');
   style.rel = 'stylesheet';
-  style.href = 'css/blue-style.css';
+  style.href = 'css/darkgreen-style.css';
   head.append(style);
   const page = document.querySelector('.page');
   const input = createElem('input', {
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     name: 'page-input-text',
     title: 'Начните вводить текст',
   });
+
   // элемента параграф с пустым символом
   const paragraph = createElem('p', {
     className: 'page__text',
@@ -50,17 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ПРИ НАЧАЛЕ ВВОДА ТЕКСТА В ПОЛЕ ЗАДЕРЖИВАЕМ ВЫВОД ТЕКСТА НА 300 мс
-  // так
   input.addEventListener('input', (event) => {
     setTimeout(inputHandler, 300, input, paragraph);
   });
-
-  /* или так
-  // ПРИ НАЧАЛЕ ВВОДА ТЕКСТА В ПОЛЕ ЗАДЕРЖИВАЕМ ВЫВОД ТЕКСТА НА 300 мс
-  input.addEventListener('input', (event) => {
-    setTimeout(() => {
-      inputHandler(input, paragraph);
-      }, 300);
-    });
-  */
 });
