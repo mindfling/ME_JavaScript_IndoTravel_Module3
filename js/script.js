@@ -27,9 +27,8 @@ const applyStyleSheet = (str) => {
 
 // функция обработчик строки ввода
 const inputHandle = (input, output) => {
-  console.log('input: ', input.value, 'output: ', output.textContent);
   const text = input.value.split(' ')
-    .map(word => toCapitalizeString(word)).join(' ');
+    .map(word => toCapitalizedString(word)).join(' ');
   output.textContent = text;
 };
 
@@ -74,10 +73,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   };
 
-  const debounceInputHandle = debounceTimer(showText, 300);
+  // const debounceInputHandle = debounceTimer(showText, 300);
+  const debounceInputHandleCapitalize = debounceTimer(inputHandle, 300);
 
   // page.input.addEventListener('input', debounceInputHandle);
   page.input.addEventListener('input', (event) => {
-    debounceInputHandle(page.input, page.output);
+    debounceInputHandleCapitalize(page.input, page.output);
   });
 });
