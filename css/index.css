@@ -421,21 +421,29 @@ html {
 		position: relative;
 		-webkit-box-sizing: border-box;
 		box-sizing: border-box;
-}
-
-*,
-*::before,
-*::after {
-		-webkit-box-sizing: inherit;
+    scroll-behavior: smooth;
+    /* * it works only at -moz-ff; * */
+    scrollbar-color: orange #2c2c2c;
+    scrollbar-width: thin;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    -webkit-box-sizing: inherit;
 		box-sizing: inherit;
-}
-
-body {
-		min-width: 320px;
+  }
+  
+  body {
+    min-width: 320px;
 		font-family: "Nunito", sans-serif;
 		font-size: 18px;
 		font-weight: 300;
 		color: #303030;
+    background-color: #f0f0f0;
+    /* background-color: wheat; */
+    /* scrollbar-color: orange red; */
+    /* scrollbar-width: thin; */
 }
 
 a {
@@ -3361,7 +3369,38 @@ p {
 		}
 }
 
+/* *begin* custom selection *** */
 ::selection {
   color: #fff;
   background-color: #ff9800c2;
 }
+/* *end* custom selection *** */
+
+
+/************************** custom chrome scroll *****************************/
+::-webkit-resizer {
+  background-image: url('');
+  background-repeat: no-repeat;
+  width: 29px;
+  height: 111px;
+}
+::-webkit-scrollbar {
+  width: 14px;
+}
+::-webkit-scrollbar-button {
+  background-color: #FCB500;
+  width: 14px;
+  height: 0;
+}
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  background-color: #FCB500;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #fc8600;
+}
+::-webkit-scrollbar-track {
+  background-color: #4d4d4d;
+}
+/************************ end custom chrome scroll ***************************/
