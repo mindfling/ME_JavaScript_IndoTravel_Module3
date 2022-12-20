@@ -2,6 +2,7 @@
 // eslint-disable-next-line strict
 'use strict';
 
+// todo with debounce
 let opacity = 1;
 let left = 0;
 
@@ -55,10 +56,11 @@ const hideOverlay = () => {
   return;
 };
 
+// todo need to do with progress %%
 const stepFly = () => {
   const scrollWidth = document.documentElement.scrollWidth;
   const maxLeft = scrollWidth - fly.clientWidth;
-  left += 15;
+  left += 20;
   console.log('left: ', left);
   fly.style.transform = `translateX(${left}px) rotateZ(90deg)`;
   if (left < maxLeft) {
@@ -72,31 +74,4 @@ const stepFly = () => {
   return;
 };
 
-// setTimeout(stepFly, 0);
 requestAnimationFrame(stepFly);
-
-/*
-const allTime = 3500;
-let start = NaN;
-let progress = 0;
-let percentProgress = 0;
-const step = (timestamp) => {
-  if (!start) {
-    start = timestamp;
-    console.log('start start: ', start);
-  }
-  progress = Math.min(timestamp - start, allTime);
-  percentProgress = (progress / allTime) * 100;
-  console.log('percentProgress: ', percentProgress);
-  fly.style.transform = `
-    translateX(${(percentProgress * (document.documentElement.clientWidth - fly.clientWidth) / 100)}px)
-    rotateZ(90deg)`;
-  console.log('progress: ', progress);
-  if (progress < allTime) {
-    // * при меньше -- еще движемся -- >>
-    requestAnimationFrame(step);
-  }
-};
-// * ЗАПУСКАЕМ
-requestAnimationFrame(step);
-*/
