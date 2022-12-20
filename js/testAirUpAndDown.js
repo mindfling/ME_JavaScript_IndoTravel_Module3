@@ -22,6 +22,8 @@ fly.style.cssText = `
 
 document.body.append(fly);
 
+// * fly simple scroll without requestAnimationFrame
+
 let nextOffset = 0;
 let prevOffset = nextOffset;
 const scrollHandle = (event) => {
@@ -31,7 +33,6 @@ const scrollHandle = (event) => {
   const pageOffset = window.pageYOffset;
   nextOffset = pageOffset;
   const percentYOffset = Math.round((pageOffset / (scrollHeight - clientHeight)) * 100);
-  // console.log('pageYOffset: ', pageYOffset, 'percentYOffset: ', percentYOffset);
   if (prevOffset < nextOffset) {
     console.log('скролим вниз');
     fly.style.transform = `translateY(${((clientHeight - fly.clientHeight) * percentYOffset / 100)}px) rotate(180deg)`;
@@ -39,52 +40,8 @@ const scrollHandle = (event) => {
     console.log('скролим вверх');
     fly.style.transform = `translateY(${((clientHeight - fly.clientHeight) * percentYOffset / 100)}px) rotate(0)`;
   }
-  // requestAnimationFrame(scrollHandle);
   return;
 };
 
 document.addEventListener('scroll', scrollHandle);
 
-// const allTime = 100;
-// let start = NaN;
-// let progress = 0;
-// let percentProgress = 0;
-
-/*
-const step = (timestamp) => {
-  if (!start) {
-    start = timestamp;
-    console.log('start start: ', start);
-  }
-  progress = Math.min(timestamp - start, allTime);
-  percentProgress = (progress / allTime) * 100;
-  console.log('percentProgress: ', percentProgress);
-
-  fly.style.transform = `
-    translateY(${(percentProgress * (document.documentElement.clientWidth - fly.clientWidth) / 100)}px)
-    rotateZ(90deg)`;
-  console.log('progress: ', progress);
-  if (progress < allTime) {
-    // * при меньше -- еще движемся -- >>
-    requestAnimationFrame(step);
-  }
-};
-// * ЗАПУСКАЕМ
-requestAnimationFrame(step);
-*/
-
-// console.log(document.documentElement.clientHeight / 2);
-
-/*
-fly.style.cssText = `
-  display: block;
-  position: fixed;
-  top: 0px;
-  right: 0px;
-  width: 50px;
-  height: 50px;
-  background: url(./img/airplane.svg) center center no-repeat;
-  background-size: cover;
-  z-index: 99;
-`;
-*/

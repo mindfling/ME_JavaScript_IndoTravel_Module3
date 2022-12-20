@@ -3,7 +3,6 @@
 import {accordionControl} from './modules/accordion.js';
 import {menuControl} from './modules/menu.js';
 import {timerControl} from './modules/timer.js';
-import './modules/testfly.js';
 import {flyControl} from './modules/fly.js';
 
 const heroBanner = document.querySelector('.hero__text');

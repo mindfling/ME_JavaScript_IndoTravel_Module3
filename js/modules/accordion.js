@@ -12,10 +12,6 @@ export const accordionControl = (accordion) => {
   const travelWrappers =
           accordion.querySelectorAll('.travel__item-text-wrapper');
 
-  // console.log('travelItems: ', travelItems);
-  // console.log('travelBtns: ', travelBtns);
-  // console.log('travelWrappers: ', travelWrappers);
-
   // initial скрываем все вкладки аккордиона
   travelItems.forEach((item, index) => {
     item.classList.remove('travel__item_active');
