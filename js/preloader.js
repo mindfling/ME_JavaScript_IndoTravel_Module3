@@ -4,8 +4,7 @@
 
 // * preloader overlay *
 const docEl = document.documentElement;
-const flySize = 50;
-const clientCenter = Math.ceil((docEl.clientHeight - flySize) / 2);
+const flySize = 100;
 
 const flyOverlay = document.createElement('div');
 flyOverlay.classList.add('overlay');
@@ -19,21 +18,21 @@ flyOverlay.style.cssText = `
   left: 0;
   opacity: 1;
   z-index: 999;
-  `;
-
+`;
 const fly = document.createElement('div');
 fly.classList.add('fly', 'fly_fixed');
 fly.style.cssText = `
   display: block;
   position: fixed;
-  width: 50px;
-  height: 50px;
-  top: calc(50% - 25px);
+  width: 100px;
+  height: 100px;
+  top: calc(50% - 50px);
   left: 0;
   background: url(./img/airplane.svg) center center / cover no-repeat;
   background-color: transparent;
   z-index: 99;
-  opacity: 1;
+  opacity: 0;
+  transition: all 100ms ease;
 `;
 
 flyOverlay.append(fly);
@@ -47,7 +46,6 @@ const hideOverlay = (timestamp) => {
   startOpacity = startOpacity || timestamp;
   opacityProgress = (timestamp - startOpacity) / durationOpacity;
   currentOpacity = 1 - opacityProgress;
-  console.log('currentOpacity: ', currentOpacity);
   flyOverlay.style.opacity = currentOpacity;
   if (currentOpacity > 0) {
     requestAnimationFrame(hideOverlay);
@@ -58,7 +56,7 @@ const hideOverlay = (timestamp) => {
   return;
 };
 
-const durationFly = 2000; // 2s
+const durationFly = 1000; // 1s
 let percentProgress = 0; // * 0% -> 100%
 let startTime = NaN;
 // * do with progress %%
@@ -67,25 +65,33 @@ let animationCount = 0;
 fly.style.rotate = `90deg`;
 // todo with debounce
 const stepFly = (timestemp) => {
-  console.log('startTime: ', startTime);
   if (!startTime) {
     startTime = timestemp;
   }
+  console.log(animationCount++);
   percentProgress = (timestemp - startTime) / durationFly;
-  console.log('timestemp: ', timestemp);
-  console.log('steps:', animationCount++);
   const scrollWidth = docEl.scrollWidth;
   const maxShift = scrollWidth - fly.clientWidth;
   shift = maxShift * percentProgress;
   fly.style.translate = `${shift}px 0`;
   if (percentProgress < 1) {
-    requestAnimationFrame(stepFly);
-    if (percentProgress > 0.9) {
-      requestAnimationFrame(hideOverlay);
+    if (percentProgress < 0.2) {
+      // самолет появляется
+      fly.style.opacity = (5 * percentProgress);
+      // console.log('opacity increase: ', fly.style.opacity);
+    } else if (percentProgress > 0.8) {
+      // самолет исчезает
+      fly.style.opacity = ((1 - percentProgress) * 5);
+      // console.log('progress:', percentProgress.toFixed(2), 'opacity dec: ', parseFloat(fly.style.opacity).toFixed(2));
+    } else {
+      fly.style.opacity = 1;
     }
+    // console.log('opacity:', fly.style.opacity);
+    requestAnimationFrame(stepFly);
   } else {
+    // самолет пролетел удаляем оверлей
     startTime = NaN;
-    // requestAnimationFrame(hideOverlay);
+    requestAnimationFrame(hideOverlay);
   }
   return;
 };
