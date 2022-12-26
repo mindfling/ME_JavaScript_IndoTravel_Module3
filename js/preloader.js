@@ -19,14 +19,15 @@ flyOverlay.style.cssText = `
   opacity: 1;
   z-index: 999;
 `;
+// * preloader fly *
 const fly = document.createElement('div');
 fly.classList.add('fly', 'fly_fixed');
 fly.style.cssText = `
   display: block;
   position: fixed;
-  width: 100px;
-  height: 100px;
-  top: calc(50% - 50px);
+  width: ${flySize}px;
+  height: ${flySize}px;
+  top: calc(50% - ${flySize / 2}px);
   left: 0;
   background: url(./img/airplane.svg) center center / cover no-repeat;
   background-color: transparent;
@@ -59,7 +60,7 @@ const hideOverlay = (timestamp) => {
 const durationFly = 1000; // 1s
 let percentProgress = 0; // * 0% -> 100%
 let startTime = NaN;
-// * do with progress %%
+// do with progress %%
 let shift = 0;
 let animationCount = 0;
 fly.style.rotate = `90deg`;
@@ -78,15 +79,12 @@ const stepFly = (timestemp) => {
     if (percentProgress < 0.2) {
       // самолет появляется
       fly.style.opacity = (5 * percentProgress);
-      // console.log('opacity increase: ', fly.style.opacity);
     } else if (percentProgress > 0.8) {
       // самолет исчезает
       fly.style.opacity = ((1 - percentProgress) * 5);
-      // console.log('progress:', percentProgress.toFixed(2), 'opacity dec: ', parseFloat(fly.style.opacity).toFixed(2));
     } else {
       fly.style.opacity = 1;
     }
-    // console.log('opacity:', fly.style.opacity);
     requestAnimationFrame(stepFly);
   } else {
     // самолет пролетел удаляем оверлей
