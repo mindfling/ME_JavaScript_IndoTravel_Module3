@@ -1,16 +1,17 @@
 // * module for booking at #tour
 
+const URI = 'date.json';
+
 const tourSection = document.getElementById('tour');
 const tourForm = tourSection.querySelector('.tour__form');
 const tourDate = tourForm.dates; // * #tour__date
 const tourPeople = tourForm.people; // * #tour__people
 
-const URI = 'date.json';
-// получаем удаленный список
+// получаем удаленный список АСИНХРОННО
 const getListReservation = async (uri) => {
   const result = await fetch(uri);
-  const list = await result.json();
-  return list;
+  const data = await result.json();
+  return data;
 };
 
 const addSelectOption = ({
@@ -29,73 +30,77 @@ const addSelectOption = ({
   return parent;
 };
 
-export const tourControl = async () => {
-  console.log('Hi tour');
-  console.log('tourDate: ', tourDate);
-  console.log('tourPeople: ', tourPeople);
-  // очищаем
-  tourDate.replaceChildren();
-  tourPeople.replaceChildren();
-  // default select
+const addSelectDefaultDates = (parent) => {
+  // parent = tourDate
   addSelectOption({
-    parent: tourDate,
+    parent,
     classNameList: ['tour__option', 'tour__date-text'],
     value: '',
     text: 'Выберите дату',
   });
-  // default select
+};
+
+const addSelectDefaultPeople = (parent) => {
+  // parent = tourPeople
   addSelectOption({
-    parent: tourPeople,
+    parent,
     classNameList: ['tour__option', 'tour__people-text'],
     value: '',
     text: 'Количество человек',
   });
-  // получаем список
-  const list = await getListReservation(URI);
-  console.log('list ... ', ...list);
+};
 
-
-  const renderDatesList = (parent, list) => {
-    // заполняем даты
-    list.forEach((item, index) => {
-      addSelectOption({
-        parent: tourDate,
-        classNameList: ['tour__option'],
-        value: index + 1,
-        text: item.date + ' даты',
-        // index: index + 1,
-      });
+// заполняем даты туров
+const renderDatesList = (parent, data) => {
+  data.forEach((item, index) => {
+    addSelectOption({
+      parent,
+      classNameList: ['tour__option'],
+      value: index + 1,
+      text: item.date + ' даты',
+      // index: index + 1,
     });
-  };
+  });
+};
 
-  // заполняем select количество человек min..max для тура номер list[j]
-  const renderPeopleList = (parent, tour) => {
-    const minPeople = tour['min-people'];
-    const maxPeople = tour['max-people'];
-    for (let i = minPeople; i <= maxPeople; i++) {
-      addSelectOption({
-        parent,
-        classNameList: ['tour__option'],
-        value: i,
-        text: i + ' человек',
-      });
-    }
-  };
+// заполняем select количество человек min..max для тура номер data[j]
+const renderPeopleList = (parent, tour) => {
+  const minPeople = tour['min-people'];
+  const maxPeople = tour['max-people'];
+  for (let i = minPeople; i <= maxPeople; i++) {
+    addSelectOption({
+      parent,
+      classNameList: ['tour__option'],
+      value: i,
+      text: i + ' человек',
+    });
+  }
+};
 
-  renderDatesList(tourDate, list);
+
+// * tour control all func
+export const tourControl = async () => {
+  // очищаем оба списка
+  tourDate.replaceChildren();
+  tourPeople.replaceChildren();
+  // подсказка
+  tourDate.title = 'Начните с выбора даты тура';
+  tourPeople.title = 'Выберите дату тура, а потом количество человек';
+  // первая строка даты списка
+  addSelectDefaultDates(tourDate);
+  // получаем список
+  const data = await getListReservation(URI);
+  // один раз рендерим список даты туров
+  renderDatesList(tourDate, data);
+  // вешаем событие select
   tourDate.addEventListener('change', (event) => {
     const target = event.target;
-    const listIndex = target.value - 1;
-    console.log(event.target, event.target.value);
-    tourPeople.replaceChildren();
-    addSelectOption({
-      parent: tourPeople,
-      classNameList: ['tour__option', 'tour__people-text'],
-      value: '',
-      text: 'Количество человек',
-    });
-    renderPeopleList(tourPeople, list[listIndex]);
+    const listIndex = target.value; // индекс номер списка
+    tourPeople.replaceChildren(); // очищаем
+    if (listIndex) {
+      // при каждом новом выборе даты тура перерендериваем Количество человек
+      addSelectDefaultPeople(tourPeople);
+      renderPeopleList(tourPeople, data[listIndex - 1]);
+    }
   });
-
-  console.log('ok');
 };
