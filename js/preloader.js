@@ -2,22 +2,33 @@
 // eslint-disable-next-line strict
 'use strict';
 
-// * preloader overlay *
-const docEl = document.documentElement;
-const flySize = 100;
+// * do with raf debounce
+const debounce = (fn) => {
+  let raf = false;
+  return (...args) => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      fn(...args);
+      raf = false;
+    });
+  };
+};
 
+// * preloader overlay *
+const flySize = 100;
 const flyOverlay = document.createElement('div');
 flyOverlay.classList.add('overlay');
 flyOverlay.style.cssText = `
   display: block;
   position: fixed;
-  background-color: rgba(0,0,0,0.96);
+  background-color: rgba(0,0,0,0.98);
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  opacity: 1;
+  opacity: 0;
   z-index: 999;
+  transition: all 200ms ease;
 `;
 // * preloader fly *
 const fly = document.createElement('div');
@@ -38,6 +49,7 @@ fly.style.cssText = `
 
 flyOverlay.append(fly);
 document.body.append(flyOverlay);
+fly.style.rotate = `90deg`;
 
 const durationOpacity = 200; // 300ms
 let startOpacity = NaN;
@@ -57,25 +69,22 @@ const hideOverlay = (timestamp) => {
   return;
 };
 
-const durationFly = 1000; // 1s
-let percentProgress = 0; // * 0% -> 100%
+
+const durationFly = 1000; // * 1s
+let percentProgress = 0;
 let startTime = NaN;
-// do with progress %%
-let shift = 0;
-let animationCount = 0;
-fly.style.rotate = `90deg`;
-// todo with debounce
+let leftShift = 0;
 const stepFly = (timestemp) => {
   if (!startTime) {
     startTime = timestemp;
   }
-  console.log(animationCount++);
   percentProgress = (timestemp - startTime) / durationFly;
-  const scrollWidth = docEl.scrollWidth;
+  const scrollWidth = document.documentElement.scrollWidth;
   const maxShift = scrollWidth - fly.clientWidth;
-  shift = maxShift * percentProgress;
-  fly.style.translate = `${shift}px 0`;
+  leftShift = maxShift * percentProgress;
+  fly.style.translate = `${leftShift}px 0`;
   if (percentProgress < 1) {
+    flyOverlay.style.opacity = 1;
     if (percentProgress < 0.2) {
       // самолет появляется
       fly.style.opacity = (5 * percentProgress);
@@ -85,13 +94,16 @@ const stepFly = (timestemp) => {
     } else {
       fly.style.opacity = 1;
     }
-    requestAnimationFrame(stepFly);
+    // requestAnimationFrame(stepFly); // no debounce
+    requestAnimationFrame(debounceFly); // with debounce
   } else {
-    // самолет пролетел удаляем оверлей
     startTime = NaN;
     requestAnimationFrame(hideOverlay);
   }
   return;
 };
 
-requestAnimationFrame(stepFly);
+// requestAnimationFrame(stepFly);
+// * new debounce fly
+const debounceFly = debounce(stepFly);
+requestAnimationFrame(debounceFly);
