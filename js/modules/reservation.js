@@ -17,23 +17,24 @@ const clearSelectList = (parent) => {
   return parent;
 };
 
-const reservation = document.getElementById('reservation');
-const reservationForm = reservation.querySelector('.reservation__form');
+const reservationForm = document.querySelector('.reservation__form');
 const reserveDate = reservationForm.querySelector('#reservation__date');
 const reservePeople = reservationForm.querySelector('#reservation__people');
-const reservationData = reservationForm.querySelector('.reservation__data');
-const reservationPrice = reservationForm.querySelector('.reservation__price');
+const reserveData = reservationForm.querySelector('.reservation__data');
+const reservePrice = reservationForm.querySelector('.reservation__price');
 
-const addTourOption = (parent, value = '', text = '') => {
+
+const addOption = (parent, value = '', text = '', index = 0) => {
   const option = document.createElement('option');
   option.classList.add('tour__option', 'reservation__option');
   option.value = value || '';
   option.textContent = text || '';
+  option.dataset.index = index;
   parent.append(option);
 };
 
 // 1st select option
-const addDefaultTourOption = (parent, value = '', text = '') => {
+const addDefaultOption = (parent, value = '', text = '') => {
   const option = document.createElement('option');
   option.classList.add('tour__option');
   option.value = value;
@@ -44,24 +45,41 @@ const addDefaultTourOption = (parent, value = '', text = '') => {
 // * reservationControl
 export const reservationControl = async () => {
   clearSelectList(reserveDate);
-  addDefaultTourOption(reserveDate, '', 'Дата путешествия');
+  addDefaultOption(reserveDate, '', 'Дата путешествия');
 
   clearSelectList(reservePeople);
-  addDefaultTourOption(reservePeople, '', 'Количество человек');
+  addDefaultOption(reservePeople, '', 'Количество человек');
 
   // other selects
   const list = await getListReservation(URI);
-  list.forEach(item => {
-    // console.log(`Дата маршрута: ${item.date} ` + `от ${item['min-people']} до ${item['max-people']} человек`);
-    addTourOption(reserveDate, item.date, 'даты ' + item.date);
+  list.forEach((item, index) => {
+    addOption(reserveDate, item.date, 'даты ' + item.date, index);
   });
 
-  const minPeople = list[0]['min-people'];
-  const maxPeople = list[0]['max-people'];
-  for (let i = minPeople; i <= maxPeople; i++) {
-    addTourOption(reservePeople, i, i + ' человек');
-  }
+  // const minPeople = list[0]['min-people'];
+  // const maxPeople = list[0]['max-people'];
+  // for (let i = minPeople; i <= maxPeople; i++) {
+  //   addOption(reservePeople, i, i + ' человек');
+  // }
 
-  reservationData.textContent = list[0].date + ' ' + list[0]['max-people'] + ' человек';
-  reservationPrice.textContent = list[0].price + ' ₽';
+
+  reserveDate.addEventListener('change', (event) => {
+    const target = event.target;
+    const selectedIndex = reserveDate.selectedIndex; //
+    const listIndex = target[selectedIndex].dataset.index; // индекс номер списка
+    console.log('selectedIndex: ', selectedIndex);
+    console.log('listIndex: ', listIndex);
+    reservePeople.replaceChildren(); // очищаем
+    if (listIndex) {
+      // при каждом новом выборе даты тура перерендериваем Количество человек
+      const minPeople = list[listIndex]['min-people'];
+      const maxPeople = list[listIndex]['max-people'];
+      for (let i = minPeople; i <= maxPeople; i++) {
+        addOption(reservePeople, i, i + ' человек');
+      }
+      // reserveData.textContent = list[listIndex].date + ' ' + list[listIndex]['max-people'] + ' человек';
+      reserveData.textContent = list[listIndex].date;
+      reservePrice.textContent = list[listIndex].price + ' ₽';
+    }
+  });
 };
