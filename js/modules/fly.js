@@ -1,8 +1,21 @@
 /* eslint-disable max-len */
-// * test fly vertical airplane move with vertical
+// * fly vertical airplane move with vertical
+const MIN_WIDTH = 758;
 
-const calcPositionFly = (fly) => {
-  // расчет самолетика с-верху-вниз
+// * do with raf debounce
+const debounce = (fn) => {
+  let raf = NaN;
+  return (...args) => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      fn(...args);
+      raf = NaN;
+    });
+  };
+};
+
+
+const calcPositionFlyUpTop = (fly) => {
   fly.prevOffset = fly.nextOffset;
   fly.nextOffset = window.pageYOffset;
   const scrollHeight = document.documentElement.scrollHeight;
@@ -12,29 +25,35 @@ const calcPositionFly = (fly) => {
   const percentScroll = Math.round((window.pageYOffset * 100) / maxScroll);
   const top = maxDown * percentScroll / 100;
   let opacity = 1;
-  if (percentScroll > 10) {
-    opacity = 1;
-    fly.style.pointerEvents = 'auto';
-  } else {
-    opacity = percentScroll / 10;
-    fly.style.pointerEvents = 'none';
-  }
+  // if (percentScroll > 10) {
+  //   opacity = 1;
+  //   fly.style.pointerEvents = 'auto';
+  // } else {
+  //   opacity = percentScroll / 10;
+  //   fly.style.pointerEvents = 'none';
+  // }
   fly.style.opacity = opacity;
+  console.log(fly.prevOffset, fly.nextOffset, fly.prevOffset - fly.nextOffset)
+  if (fly.prevOffset === fly.nextOffset) {
+    console.log('равно');
+    return;
+  }
   if (fly.prevOffset < fly.nextOffset) {
     // скролим вниз
+    console.log('скролим вниз: ');
     fly.style.transform = `translateY(${top}px) rotate(180deg)`;
-    fly.classList.add('fly_down');
-    fly.classList.remove('fly_up');
+    // fly.classList.add('fly_down');
+    // fly.classList.remove('fly_up');
   } else {
     // скролим вверх
+    console.log('скролим вверх: ');
     fly.style.transform = `translateY(${top}px) rotate(0)`;
-    fly.classList.add('fly_up');
-    fly.classList.remove('fly_down');
+    // fly.classList.add('fly_up');
+    // fly.classList.remove('fly_down');
   }
 };
 
 const flyInit = () => {
-  // инициируем значения
   const flySize = 50;
   const fly = document.createElement('div');
   fly.classList.add('fly', 'fly_fixed', 'fly_vertical');
@@ -54,52 +73,47 @@ const flyInit = () => {
       transform: rotate(180deg);
       transition: all 200ms ease;
   `;
-  document.body.append(fly);
-  // для направления смещения
   fly.nextOffset = 0;
   fly.prevOffset = fly.nextOffset;
-  // click по самолету
-  fly.addEventListener('click', (event) => {
-    // не работает плавно в Google Chrome нужна настройка
-    if (fly.classList.contains('fly_up')) {
-      document.body.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-      console.log('в начало страницы');
-    } else {
-      document.body.scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
-      });
-      console.log('до конца страницы');
-    }
-  });
-  // возвращаем объект элемент fly
+  document.body.append(fly);
+  // fly.addEventListener('click', (event) => {
+  //   if (fly.classList.contains('fly_up')) {
+  //     document.body.scrollIntoView({
+  //       behavior: 'smooth',
+  //       block: 'start',
+  //     });
+  //     console.log('в начало страницы');
+  //   } else {
+  //     document.body.scrollIntoView({
+  //       behavior: 'smooth',
+  //       block: 'end',
+  //     });
+  //     console.log('до конца страницы');
+  //   }
+  // });
   return fly;
 };
 
 
+const debounceFlyUpTop = debounce(calcPositionFlyUpTop);
+
 // todo with debounce
 export const flyControl = () => {
-  if (document.documentElement.clientWidth >= 758) {
-    //  Если ширина экрана меньше 758px, то иконки этой на странице быть не должно
-    // ширина экрана больше 758 px
+  if (document.documentElement.clientWidth >= MIN_WIDTH) {
     const fly = flyInit();
-    // initial RAF
+
     requestAnimationFrame(() => {
-      calcPositionFly(fly);
+      debounceFlyUpTop(fly);
     });
 
-    let count = 0; // ? debug
-    // scroll при прокрутке экрана RAF
     document.addEventListener('scroll', (event) => {
       requestAnimationFrame(() => {
-        console.log(count++);
-        calcPositionFly(fly);
+        debounceFlyUpTop(fly);
+        // calcPositionFlyUpTop(fly);
       });
     });
   } else {
-    console.log('ширина браузера меньше 758 px', document.documentElement.clientWidth);
+    console.log(`Ширина браузера меньше ${MIN_WIDTH}px`,
+      document.documentElement.clientWidth);
   }
 };
