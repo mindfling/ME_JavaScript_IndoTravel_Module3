@@ -24,14 +24,17 @@ const reserveData = reservationForm.querySelector('.reservation__data');
 const reservePrice = reservationForm.querySelector('.reservation__price');
 
 
-const addOption = (parent, value = '', text = '', index = 0) => {
+const addOption = (parent, value = '', text = '', index, price) => {
   const option = document.createElement('option');
   option.classList.add('tour__option', 'reservation__option');
   option.value = value || '';
   option.textContent = text || '';
-  option.dataset.index = index;
+  if (index) option.dataset.index = index;
+  if (price) option.dataset.price = price;
   parent.append(option);
 };
+
+// todo do it with map list
 
 // 1st select option
 const addDefaultOption = (parent, value = '', text = '') => {
@@ -53,7 +56,7 @@ export const reservationControl = async () => {
   // other selects
   const list = await getListReservation(URI);
   list.forEach((item, index) => {
-    addOption(reserveDate, item.date, 'даты ' + item.date, index);
+    addOption(reserveDate, item.date, 'даты ' + item.date, index, item.price);
   });
 
   // const minPeople = list[0]['min-people'];

@@ -3,7 +3,7 @@
 const URI = 'date.json';
 
 const tourSection = document.getElementById('tour');
-const tourForm = tourSection.querySelector('.tour__form');
+const tourForm = document.querySelector('.tour__form');
 const tourDate = tourForm.dates; // * #tour__date
 const tourPeople = tourForm.people; // * #tour__people
 
@@ -58,7 +58,7 @@ const renderDatesList = (parent, data) => {
       classNameList: ['tour__option'],
       value: index + 1,
       text: item.date + ' даты',
-      // index: index + 1,
+      index: index + 1,
     });
   });
 };
