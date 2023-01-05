@@ -110,7 +110,7 @@ const flyInitBottom = () => {
       background: url(./img/airplane.svg) center center / cover no-repeat;
       background-color: transparent;
       cursor: pointer;
-      pointer-events: none;
+      /*pointer-events: none;*/
       z-index: 50;
       opacity: 1;
       transform: rotate(180deg);

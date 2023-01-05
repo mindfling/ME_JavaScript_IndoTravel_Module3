@@ -4,6 +4,16 @@ import {plural} from './utiles.js';
 
 const URI = 'date.json';
 
+// форматирование строки цены
+const getRuPriceFormat = (num) => {
+  const ruPriceFormatter = new Intl.NumberFormat('ru', {
+    style: 'currency',
+    currency: 'RUB',
+  });
+  return ruPriceFormatter.format(num);
+};
+
+// удаленное получение данных о доступных турах
 const getDataList = async (url) => {
   if (!url) return;
   const result = await fetch(url);
@@ -46,6 +56,7 @@ export const tourBooking = async () => {
 
   const data = await getDataList(URI);
   console.log('data: ', data);
+
 
   clearSelectList(tourDates);
   clearSelectList(tourPeople);
@@ -94,37 +105,64 @@ export const tourBooking = async () => {
       const minPeople = item['min-people'];
       const maxPeople = item['max-people'];
       for (let i = minPeople; i <= maxPeople; i++) {
-        addOption(tourPeople, i, i + ' ' + plural(i, ['человек', 'человека', 'человек']));
+        addOption(tourPeople, i, i + ' ' + plural(i,
+          ['человек', 'человека', 'человек']));
       }
-      console.log('tour for', minPeople, maxPeople);
+      console.log('tour for', minPeople, maxPeople, item);
     } else {
       console.log('не выбрана дата тура');
     }
+  });
+
+  tourPeople.addEventListener('change', event => {
+    console.log('tour people', +tourPeople.value);
   });
 
 
   addOption(reserveDates, '', 'Дата путешествия');
   reserveDates.append(...list);
 
+  // todo with obj tour = {}
   let date = '';
   let price = '';
+  let firstDay;
+  let lastDay;
+  const dateRegexpTemplate = /\d\d\.\d\d/g;
   reserveDates.addEventListener('change', event => {
     clearList(reservePeople);
     const selectedIndex = reserveDates.selectedIndex;
     const listIndex = reserveDates[selectedIndex].dataset.index;
     if (listIndex) {
+      // индекс из выбраного пункта меню
       const item = data[listIndex];
+      // дата из массива списка туров
       date = item.date;
+      const resDates = date.match(dateRegexpTemplate);
+      console.log('resDates: ', resDates);
+      firstDay = resDates[0];
+      lastDay = resDates[1];
+      if (firstDay && lastDay) {
+        console.log('GOOD firstDay:', firstDay, 'lastDay:', lastDay);
+        firstDay = firstDay.split('.').join(' ');
+      } else {
+        console.log('bad firstDay:', firstDay, 'lastDay:', lastDay);
+        date = item.date;
+        firstDay = undefined;
+        lastDay = undefined;
+      }
       reserveData.textContent = date;
+
       price = item.price;
-      reservePrice.textContent = price + ' ₽';
+      // reservePrice.textContent = price + ' ₽';
+      reservePrice.textContent = getRuPriceFormat(price);
       addOption(reservePeople, '', 'Количество человек');
       const minPeople = item['min-people'];
       const maxPeople = item['max-people'];
       for (let i = minPeople; i <= maxPeople; i++) {
-        addOption(reservePeople, i, i + ' ' + plural(i, ['человек', 'человека', 'человек']));
+        addOption(reservePeople, i, i + ' ' + plural(i,
+          ['человек', 'человека', 'человек']));
       }
-      console.log(minPeople, maxPeople);
+      // console.log(minPeople, maxPeople);
     } else {
       reserveData.textContent = '';
       reservePrice.textContent = '';
@@ -133,17 +171,44 @@ export const tourBooking = async () => {
 
   reservePeople.addEventListener('change', event => {
     const target = event.target;
-    const selectedIndex = target.selectedIndex;
-    const selectedValue = target[selectedIndex].value;
+    // const selectedIndex = target.selectedIndex;
+    // const selectedValue = target[selectedIndex].value;
+    const selectedValue = target.value;
     if (selectedValue) {
-      reserveData.textContent = `${date}, ${selectedValue} ${plural(selectedValue, ['человек', 'человека', 'человек'])}`;
-      reservePrice.textContent = price * selectedValue + ' ₽';
+      reserveData.textContent = `${date}, ${selectedValue} ${plural(selectedValue,
+        ['человек', 'человека', 'человек'])}`;
+      // reservePrice.textContent = price * selectedValue + ' ₽';
+      // const ruPriceFormatter = new Intl.NumberFormat('ru', {
+      //   style: 'currency',
+      //   currency: 'RUB',
+      // });
+      // reservePrice.textContent = ruPriceFormatter.format(summ);
+      const summ = price * selectedValue;
+      reservePrice.textContent = getRuPriceFormat(summ);
+      console.log(reserveData.textContent, reservePrice.textContent)
     } else {
       reserveData.textContent = date;
+      reservePrice.textContent = getRuPriceFormat(price);
     }
   });
-
+  // очищаем
   reserveData.textContent = '';
   reservePrice.textContent = '';
+
+  // const str = 'some123.213212 text 2012.01-01 some more 22.21 text here';
+  /*
+  const str = '12.11 - 26.11';
+  const regexp = /\d{2}\.\d{2}/g;
+  const res = str.match(regexp);
+  console.log('res: ', res);
+  const now = new Date();
+  console.log('now: ', now, now.getFullYear());
+  const begin = res[0];
+  const t = new Date();
+  const s = `${t.getFullYear()} ${begin.split('.').join(' ')}`;
+  console.log('begin: ', '' + t.getFullYear() + ' ' + begin.split('.').join(' '));
+  console.log('begin: ', s, new Date(s).getDate(), new Date(s).getMonth());
+  */
 };
+
 
