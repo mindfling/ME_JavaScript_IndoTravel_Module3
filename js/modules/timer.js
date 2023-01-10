@@ -30,18 +30,15 @@ export const timerControl = (timer, banner) => {
     elem.innerHTML = '&nbsp;<br>&nbsp;';
   };
 
-  // ? parse ? '15/1/2022 21:55' -> '2020-1-15 21:55'
+  // parse '15/1/2022 21:55' -> '2020-1-15 21:55'
   const deadline = timer.dataset.deadline.split(' ').map(item => item.split('/').reverse().join('-')).join(' ');
   const timeDeadline = new Date(Date.parse(deadline));
-  console.log('deadline: ', deadline);
-  console.log('timeDeadline: ', timeDeadline);
 
   const timerHandle = (timeDeadline) => {
     const timeNow = new Date();
     const delta = timeDeadline.getTime() - timeNow.getTime();
     if (delta > 0) {
-      // console.log('До дедлайна осталось ', delta, 'ms');
-
+      // До дедлайна осталось ', delta, 'ms'
       const timeLeft = parseInt((timeDeadline.getTime() - timeNow.getTime()) / 1000); // all seconds
       const secondsLeft = parseInt(timeLeft % 60);
       const minutesLeft = parseInt(timeLeft / 60 % 60);
@@ -50,13 +47,13 @@ export const timerControl = (timer, banner) => {
       const daysLeft = parseInt(timeLeft / 60 / 60 / 24);
 
       if (hoursLeftAll >= 24) {
-        // console.log('больше суток в запасе', hoursLeftAll);
+        // больше суток в запасе
         timerItemDays.style.display = 'flex';
         timerCountDays.textContent = zeroBeforeNumber(daysLeft);
         timerUnitsDays.textContent = plural(daysLeft, ['день', 'дня', 'дней']);
         timerItemSeconds.style.display = 'none'; // скрываем секунды
       } else {
-        // console.log('меньше суток до', deadline);
+        // меньше суток до
         timerItemSeconds.style.display = 'flex';
         timerCountSeconds.textContent = zeroBeforeNumber(secondsLeft);
         timerUnitsSeconds.textContent = plural(secondsLeft, ['секунда', 'секунды', 'секунд']);
@@ -71,17 +68,18 @@ export const timerControl = (timer, banner) => {
 
       // запускаем функцию с разными интервалами чтобы лишний раз не наглужать
       if (hoursLeftAll < 25) {
-        // console.log('сутки');
+        // сутки
         setTimeout(timerHandle, 1000, timeDeadline);
       } else if (hoursLeftAll < 48) {
-        // console.log('около суток');
+        // около суток
         setTimeout(timerHandle, 5000, timeDeadline);
       } else {
-        // console.log('больше суток');
+        // больше суток
         setTimeout(timerHandle, 10000, timeDeadline);
       }
       return;
     } else {
+      // Время истекло
       console.log('Время истекло, ', deadline + ',', timeDeadline);
       timerRemove(timer);
       bannerRemove(banner);

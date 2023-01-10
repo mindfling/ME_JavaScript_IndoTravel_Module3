@@ -2,7 +2,7 @@
 
 const URI = 'date.json';
 
-const tourSection = document.getElementById('tour');
+// const tourSection = document.getElementById('tour');
 const tourForm = document.querySelector('.tour__form');
 const tourDate = tourForm.dates; // * #tour__date
 const tourPeople = tourForm.people; // * #tour__people
